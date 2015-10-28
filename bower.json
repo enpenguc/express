@@ -1,0 +1,31 @@
+{
+  "name": "order",
+  "version": "0.1.1",
+  "authors": [
+    "enpeng <enpenguc@163.com>"
+  ],
+  "description": "order manage",
+  "main": "app.js",
+  "moduleType": [
+    "es6",
+    "node"
+  ],
+  "keywords": [
+    "order"
+  ],
+  "license": "MIT",
+  "homepage": "127.0.0.1/3000",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "3.3.5",
+    "backbone": "~1.2.3"
+  }
+}

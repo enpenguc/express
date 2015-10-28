@@ -1,0 +1,16 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+#node,bower modules
+node_modules/
+bower_components/
+ignore/
+#sublime project files
+jointx.sublime-project
+jointx.sublime-workspace
