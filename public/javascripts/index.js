@@ -33,18 +33,42 @@ var order = Backbone.Router.extend({
 });
 
 var index = Backbone.View.extend({
+	events: {
+		"fileuploaded #upload": "fileUploaed",
+		"fileuploaderror #upload": "fileuploaderror"
+	},
 	initialize: function(argument) {
 		// body...
 	},
 	render: function(argument) {
-		$("#upload").fileinput({
-			uploadUrl: "/import",
-			language: "zh",
-			previewFileType: "text"
-		});
-		return this;
+		// $("#upload").fileinput({
+		// 	uploadUrl: "/upload",
+		// 	language: "zh",
+		// 	previewFileType: "text",
+		// 	maxFileCount: 1
+		// });
+		// return this;
+	},
+	fileUploaed: function(event, data, previewId, index) {
+		var form = data.form,
+			files = data.files,
+			extra = data.extra,
+			response = data.response,
+			reader = data.reader;
+		console.log('File uploaded triggered');
+	},
+	fileuploaderror: function(event, data) {
+		var form = data.form,
+			files = data.files,
+			extra = data.extra,
+			response = data.response,
+			reader = data.reader;
+		console.log('File upload error');
 	},
 	remove: function(argument) {
+		$('#upload').fileinput('destroy');
+
+		// $('#input-id').fileinput('upload');
 		// body...
 	}
 });
