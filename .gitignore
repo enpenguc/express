@@ -14,3 +14,5 @@ ignore/
 #sublime project files
 jointx.sublime-project
 jointx.sublime-workspace
+#temp
+temp/

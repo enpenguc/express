@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var multiparty = require('connect-multiparty');
 
 var routes = require('./routes/index');
 var uploader = require('./routes/upload');
@@ -20,9 +21,15 @@ app.set('view engine', 'hbs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  // extended: false
-  uploadDir:__dirname+'/public/temp'
+  extended: false,
+  uploadDir: __dirname + '/temp'
 }));
+
+// multiparty:http://ju.outofmemory.cn/entry/75172
+app.use(multiparty());
+//
+process.env.TMPDIR = '.';
+
 app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
