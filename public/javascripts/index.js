@@ -1,4 +1,4 @@
-var order = Backbone.Router.extend({
+var orderApp = Backbone.Router.extend({
 	routes: {
 		"history": "history", // #help
 		"help": "help",
@@ -44,9 +44,12 @@ var index = Backbone.View.extend({
 		$("#upload").fileinput({
 			uploadUrl: "/upload",
 			language: "zh",
-			// allowedFileExtensions=["csv"],
+			allowedFileExtensions: ["csv"],
 			previewFileType: "text",
 			maxFileCount: 1
+		}).on('fileloaded', function(event, file, previewId, index, reader) {
+			console.log("fileloaded")
+			$(this).fileinput('upload');
 		}).on('fileuploaded', function(event, data, previewId, index) {
 			var form = data.form,
 				files = data.files,
@@ -54,41 +57,22 @@ var index = Backbone.View.extend({
 				response = data.response,
 				reader = data.reader;
 			console.log('File uploaded triggered');
-		}).on('filebatchuploadsuccess', function(event, data) {
+		}).on('fileuploaderror', function(event, data, previewId, index) {
 			var form = data.form,
 				files = data.files,
 				extra = data.extra,
 				response = data.response,
 				reader = data.reader;
-			console.log('File batch upload success');
+			console.log('File upload error');
 		});
 		return this;
 	},
-	fileUploaed: function(event, data, previewId, index) {
-		debugger;
-		var form = data.form,
-			files = data.files,
-			extra = data.extra,
-			response = data.response,
-			reader = data.reader;
-		console.log('File uploaded triggered');
-	},
-	fileuploaderror: function(event, data) {
-		var form = data.form,
-			files = data.files,
-			extra = data.extra,
-			response = data.response,
-			reader = data.reader;
-		console.log('File upload error');
-	},
 	remove: function(argument) {
 		$('#upload').fileinput('destroy');
-
 		// $('#input-id').fileinput('upload');
 		// body...
 	}
 });
 
-
-var app = new order();
+var app = new orderApp();
 Backbone.history.start();
