@@ -27,6 +27,10 @@
     "jquery": "~2.1.4",
     "bootstrap": "3.3.5",
     "backbone": "~1.2.3",
-    "bootstrap-fileinput": "~4.2.7"
+    "bootstrap-fileinput": "~4.2.7",
+    "requirejs": "~2.1.20",
+    "handlebars": "~4.0.4",
+    "text": "requirejs-text#~2.0.14",
+    "backbone.localStorage": "~1.1.16"
   }
 }

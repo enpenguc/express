@@ -1,18 +1,16 @@
-{{!-- <div class="container">
+<div class="container">
     <div class="row">
         <div class="col-md-11">
             <!-- Main component for a primary marketing message or call to action -->
             <div class="jumbotron">
-                <h2>导入运单</h2>
+                <h2>扫描包裹</h2>
                 <p>请选择运单列表csv文件，或将文件拖入此下面区域，导入数据...</p>
-                <p>
-                 <input type="file" name="thumbnail" id="upload" /> 
-                     <input type="file" name="thumbnail" id="upload" data-allowed-file-extensions='["csv"]' /> 
-                 <form action="/upload" method="post" enctype="multipart/form-data" >
-                        <input type="file" name="thumbnail" id="upload" data-allowed-file-extensions='["csv"]' />
-                        <input type="submit" id="btnSubmit" class="btn btn-lg btn-primary" value="选择文件 »" />
-                    </form>
-                </p>
+                <div class="form-group has-feedback">
+                    <input type="text" name="num" class="form-control input-lg" placeholder="输入运单回车录入" />
+                </div>
+                <div class="alert alert-danger" role="alert" style="display:none;">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span>清单列表不存在当前包裹的记录。
+                </div>
             </div>
         </div>
         <div class="col-md-1">
@@ -25,5 +23,5 @@
             </nav>
         </div>
     </div>
-</div> --}}
-{{!-- <script type="text/javascript" src="/javascripts/index.js"></script> --}}
+    <audio id="nodifyAudio" src="/resources/error.mp3" controls="false" hidden="true">
+</div>
