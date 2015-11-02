@@ -5,14 +5,16 @@
  * @version $Id$
  */
 define(['backbone'], function(Backbone) {
-
-
+	"use strict"
 	var Router = Backbone.Router.extend({
 		routes: {
 			"history": "history",
+			"list": "list",
+			"list/:id": "list",
+			"scan": "scanning",
+			"scan/:id": "scanning",
 			// "search/:query": "search", // #search/kiwis
 			// "search/:query/p:page": "search", // #search/kiwis/p7
-			"scan": "scanning",
 			// 'index': '/bundles/index/indexController.js',
 			// 默认index
 			// '*path': 'index',

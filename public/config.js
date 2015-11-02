@@ -22,7 +22,8 @@
 			backbone: '/backbone/backbone',
 			"backbone.localStorage": '/backbone.localStorage/backbone.localStorage',
 			text: 'text/text', //requirejs-text插件:用于requirejs导入html类型的依赖
-			"bootstrap-fileinput": "/bootstrap-fileinput/js/fileinput"
+			"bootstrap-fileinput": "/bootstrap-fileinput/js/fileinput",
+			"bootstrap-fileinput-locale": "/bootstrap-fileinput/js/fileinput_locale_zh"
 		},
 		shim: { //引入没有使用requirejs模块写法的类库。backbone依赖underscore
 			'underscore': {
