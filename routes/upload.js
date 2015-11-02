@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var csv = require('csv');
 
-var getData = function(output) {
+var getData = function(name, output) {
 	// 所有运单
 	var arr = [],
 		// 取出单号
@@ -35,6 +35,7 @@ var getData = function(output) {
 	}
 
 	return {
+		name: name,
 		items: arr,
 		takeOut: takeOut
 	}
@@ -43,7 +44,10 @@ var getData = function(output) {
 router.post('/', function(req, res) {
 	// 获得文件的临时路径
 	var tmp_path = req.files.thumbnail.path;
+	// var name = path.basename(req.files.thumbnail.originalFilename, 'csv');
+	var name = req.files.thumbnail.originalFilename;
 	var parse = csv.parse;
+
 	var callback = function(err, output) {
 		if (err) {
 			res.jsonp({
@@ -51,7 +55,7 @@ router.post('/', function(req, res) {
 				success: false
 			});
 		} else {
-			var d = getData(output);
+			var d = getData(name, output);
 			res.jsonp({
 				data: d,
 				success: true
