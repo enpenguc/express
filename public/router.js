@@ -27,6 +27,8 @@ define(['backbone'], function(Backbone) {
 	});
 
 	var router = new Router();
+	window.appRouter = router;
+
 	//彻底用on route接管路由的逻辑，这里route是路由对应的value
 	router.on('route', function(route, params) {
 		//这里route是路由对应的方法名

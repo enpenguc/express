@@ -1,14 +1,16 @@
 /**
- * 
+ * 订单记录model
  * @authors 冯恩鹏 (enpenguc@163.com)
  * @date    2015-11-01 12:51:52
  * @version $Id$
  */
 define(['jquery',
 	'backbone',
-], function($, _, Backbone) {
+], function($, Backbone) {
 
-	var Model = Backbone.Model.extend({
+	var record = {}
+
+	record.Model = Backbone.Model.extend({
 		// Default attributes for the todo item.  
 		defaults: function() {
 			return {
@@ -20,8 +22,8 @@ define(['jquery',
 				scanned: false,
 				// 已经被扫描次数,大于1则说明包裹单号重复
 				scannedCount: 0,
-				// 是否为申报清单导入的
-				isImport: true
+				// 是否未申报清单到货
+				noDeclare: false
 			};
 		},
 		scanned: function() {
@@ -33,68 +35,25 @@ define(['jquery',
 		}
 	});
 
-	var Collection = Backbone.Collection.extend({
-		model: Model,
+	record.Collection = Backbone.Collection.extend({
+		model: record.Model,
 		// localStorage
-		// localStorage: new Backbone.LocalStorage("order-db-backbone"),
+		// localStorage: new Backbone.LocalStorage("order-record-Collection"),
 		// 添加一个非申报导入单号记录
 		addOneByScanned: function(id) {
-			this.create({
+			this.add({
 				id: id,
-				takeout: true,
 				scanned: true,
 				scannedCount: 1,
-				isImport: false
+				noDeclare: true
 			});
 		},
-		getTackoutCount: function(argument) {
+		getTackoutCount: function() {
 			return this.where({
 				takeout: true
 			}).length;
 		}
 	});
 
-
-
-	var record = {};
-
-	record.Model = Backbone.Model.extend({
-		// Default attributes for the todo item.  
-		defaults: function() {
-			return {
-				// 导入csv名称
-				name: "",
-				// 是否已经被扫描完成
-				complated: false,
-				record: []
-			};
-		},
-		initialize: function() {
-			var record = this.get("record");
-			this.set("record", new Collection(record));
-		}
-	});
-
-	record.Collection = Backbone.Collection.extend({
-		model: record.Model,
-		// localStorage
-		localStorage: new Backbone.LocalStorage("order-db-backbone"),
-		// 添加一个非申报导入单号记录
-		// addOneByScanned: function(id) {
-		// 	this.create({
-		// 		id: id,
-		// 		takeout: true,
-		// 		scanned: true,
-		// 		scannedCount: 1,
-		// 		isImport: false
-		// 	});
-		// },
-		// getTackoutCount: function(argument) {
-		// 	return this.where({
-		// 		takeout: true
-		// 	}).length;
-		// }
-	});
-
-
+	return record;
 });

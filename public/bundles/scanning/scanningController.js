@@ -12,10 +12,7 @@ define(['jquery',
 	var controller = function(id) {
 		var currModel = id ? LocalStorage.db.get(id) : LocalStorage.db.getLast();
 		var view = new View({
-			model: currModel,
-			data: {
-				id: id
-			}
+			model: currModel
 		});
 		$("#container").empty().append(view.render().el);
 		// onRouteChange销毁

@@ -5,7 +5,7 @@
             <div class="jumbotron">
                 <h2>清单列表</h2>
                 <div class="clearfix">
-                    <input type="button" class="btn btn-primary pull-right" value="导出列表">
+                    <input type="button" id="btnExport" class="btn btn-primary pull-right" value="导出列表" {{#if id}}{{else}}disabled{{/if}}>
                 </div>
                 <div class="bs-table-wrap">
                     <table class="table">
@@ -14,17 +14,17 @@
                                 <th>申报编号</th>
                                 <th>需要取出</th>
                                 <th>到货未申报</th>
-                                <th>申报未到货</th>
+                                <th>扫描状态</th>
                                 <th>单号重复</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each items}}
+                            {{#each record}}
                             <tr>
                                 <td>{{id}}</td>
                                 <td>{{#if takeout}}{{takeout}}{{/if}}</td>
                                 <td>{{#if noDeclare}}{{noDeclare}}{{/if}}</td>
-                                <td>{{scanned}}</td>
+                                <td>{{#if scanned}}OK{{else}}未扫描{{/if}}</td>
                                 <td>{{#if scannedCount}}<code>重复{{scannedCount}}次</code>{{/if}}</td>
                             </tr>
                             {{else}}
@@ -41,8 +41,8 @@
             <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">
                 <ul class="nav bs-docs-sidenav">
                     <li class=""><a href="#import">导入运单</a></li>
-                    <li class=""><a href="#list{{#if data.id}}/{{data.id}}{{/if}}">清单列表</a></li>
-                    <li class=""><a href="#scan{{#if data.id}}/{{data.id}}{{/if}}">扫描包裹</a></li>
+                    <li class=""><a href="#list{{#if id}}/{{id}}{{/if}}">清单列表</a></li>
+                    <li class=""><a href="#scan{{#if id}}/{{id}}{{/if}}">扫描包裹</a></li>
                 </ul>
                 <a class="back-to-top" href="#top">返回顶部</a>
             </nav>

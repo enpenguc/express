@@ -10,24 +10,28 @@ define(['jquery',
 	'text!./listTpl.html'
 ], function($, Backbone, Handlebars, tpl) {
 	"use strict"
+
 	var View = Backbone.View.extend({
 		template: Handlebars.compile(tpl),
-		options: {
-			data: {
-				id: ""
-			}
-		},
-		initialize: function(options) {
-			this.options = _.extend({}, _.result(this, 'options'), options || {});
+		events: {
+			"click #btnExport": "export"
 		},
 		render: function() {
-			var data = this.collection ? this.collection.toJSON() : [];
-			var html = this.template({
-				items: data,
-				data: this.options.data
-			});
+			var data = {};
+			if (this.model) {
+				data = this.model.toJSON();
+			}
+			var html = this.template(data);
 			this.$el.html(html);
 			return this;
+		},
+		export: function() {
+			if (this.model) {
+				var d = this.model.getExportCsv();
+				// $.post("/export", {
+				// 	d: d
+				// });
+			}
 		}
 	});
 

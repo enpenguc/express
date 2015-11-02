@@ -11,7 +11,6 @@ define(['jquery',
 	"use strict"
 	var controller = function() {
 		var currModel = LocalStorage.db.getLast();
-		// var currCollection = currModel ? currModel.getCollection() : null;
 		var view = new View({
 			// collection: currCollection,
 			model: currModel,

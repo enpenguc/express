@@ -11,12 +11,8 @@ define(['jquery',
 	"use strict"
 	var controller = function(id) {
 		var currModel = id ? LocalStorage.db.get(id) : LocalStorage.db.getLast();
-		var currCollection = currModel ? currModel.getCollection() : null;
 		var view = new View({
-			collection: currCollection,
-			data: {
-				id: id
-			}
+			model: currModel
 		});
 		$("#container").empty().append(view.render().el);
 		// onRouteChange销毁

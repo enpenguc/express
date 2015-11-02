@@ -6,58 +6,10 @@
  */
 define(['jquery',
 	'underscore',
+	'./record.js',
 	'backbone',
 	'backbone.localStorage'
-], function($, _, Backbone) {
-
-	var record = {}
-
-	record.Model = Backbone.Model.extend({
-		// Default attributes for the todo item.  
-		defaults: function() {
-			return {
-				// 包裹编号id
-				id: undefined,
-				// 需要取出包裹
-				takeout: false,
-				// 是否已经被扫描到
-				scanned: false,
-				// 已经被扫描次数,大于1则说明包裹单号重复
-				scannedCount: 0,
-				// 是否未申报清单到货
-				noDeclare: false
-			};
-		},
-		scanned: function() {
-			var count = this.get("scannedCount");
-			this.set({
-				scanned: true,
-				scannedCount: (count + 1)
-			});
-		}
-	});
-
-	record.Collection = Backbone.Collection.extend({
-		model: record.Model,
-		// localStorage
-		// localStorage: new Backbone.LocalStorage("order-record-Collection"),
-		// 添加一个非申报导入单号记录
-		addOneByScanned: function(id) {
-			this.add({
-				id: id,
-				scanned: true,
-				scannedCount: 1,
-				noDeclare: true
-			});
-		},
-		getTackoutCount: function() {
-			return this.where({
-				takeout: true
-			}).length;
-		}
-	});
-
-
+], function($, _, Record, Backbone) {
 
 	var dbSorage = {};
 
@@ -76,20 +28,27 @@ define(['jquery',
 		},
 		initialize: function() {
 			var d = this.get("record");
-			this.set("record", new record.Collection(d));
-			this.set("count", this.get("record").length);
-			this.listenTo(this.get("record"), "change", this.onRecordChang);
-			this.listenTo(this.get("record"), "add", this.onRecordAdd);
-			_.bindAll(this, "getCollection", "complated");
+			this.set("count", d.length);
+
+			this.set("recordCollection", new Record.Collection(d));
+			this.listenTo(this.get("recordCollection"), "change", this.onRecordChange);
+			this.listenTo(this.get("recordCollection"), "add", this.onRecordAdd);
+			_.bindAll(this, "getRecordCollection", "complated");
 			return this;
 		},
 		toJSON: function() {
 			var json = Backbone.Model.prototype.toJSON.apply(this, arguments);
-			json.record = this.get('record').toJSON();
+			json.record = this.get('recordCollection').toJSON();
+			delete json.recordCollection;
 			return json;
 		},
-		getExport: function() {
-			var collection = this.get('record');
+		// 获取记录集合
+		getRecordCollection: function() {
+			return this.get("recordCollection");
+		},
+		// 获取导出csv的数据
+		getExportCsv: function() {
+			var collection = this.getRecordCollection();
 
 			var arrOrigin = collection.where({
 				noDeclare: false
@@ -104,7 +63,7 @@ define(['jquery',
 			var arrNoScanned = collection.where({
 				scanned: false
 			});
-			var arrChongfu = = collection.where(function(item) {
+			var arrChongfu = collection.where(function(item) {
 				return item.scannedCount > 1;
 			});
 			var arr = [],
@@ -121,19 +80,23 @@ define(['jquery',
 			}
 			return arr.join("\r\n");
 		},
-		getCollection: function() {
-			return this.get("record");
-		},
 		complated: function() {
-			this.set("complated", true);
-			this.save();
+			this.save({
+				complated: true
+			});
 		},
 		onRecordAdd: function() {
-			this.set("count", this.get("record").length);
-			this.save();
+			// this.set("count", this.get("recordCollection").length);
+			this.save({
+				record: this.get("recordCollection").toJSON(),
+				count: this.get("recordCollection").length
+			});
 		},
-		onRecordChang: function() {
-			this.save();
+		onRecordChange: function() {
+			this.save({
+				record: this.get("recordCollection").toJSON()
+			});
+			// this.save();
 		}
 	});
 
@@ -158,7 +121,7 @@ define(['jquery',
 			var model = this.getLast(),
 				collection;
 			if (model) {
-				collection = model.get("record");
+				collection = model.get("recordCollection");
 			}
 			return collection;
 		},
@@ -166,7 +129,7 @@ define(['jquery',
 			var model = this.getLast(),
 				data = [];
 			if (model) {
-				data = model.get("record").toJSON();
+				data = model.get("recordCollection").toJSON();
 			}
 			return data;
 		}
@@ -175,8 +138,9 @@ define(['jquery',
 	var db = new dbSorage.Collection();
 	db.fetch();
 
+	window.db = db;
+
 	return {
-		record: record,
 		db: db
 	}
 });

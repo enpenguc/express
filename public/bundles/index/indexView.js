@@ -23,15 +23,13 @@ define(['jquery',
 			this.options = _.extend({}, _.result(this, 'options'), options || {});
 		},
 		render: function() {
-			// var currModel = this.options.dbSorage.getLast();
-			// var collection = currModel ? currModel.getCollection() : null;
 			var complated = !!this.model,
 				data = {};
 			if (complated) {
 				data = {
 					complated: true,
-					count: this.model.get("record").length,
-					takeout: this.model.get("record").getTackoutCount()
+					count: this.model.getRecordCollection().length,
+					takeout: this.model.getRecordCollection().getTackoutCount()
 				}
 			}
 			var html = this.template(data);
@@ -84,7 +82,8 @@ define(['jquery',
 			this.model = this.options.dbSorage.addRecord(data);
 			window.setTimeout(function() {
 				self.$('#upload').fileinput('destroy');
-				window.location.reload();
+				self.render();
+				// window.location.reload();
 			}, 600);
 		},
 		remove: function(argument) {

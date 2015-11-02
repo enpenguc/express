@@ -18,23 +18,20 @@ define(['jquery',
 			'<span>{{msg}}</span>',
 			'</div>'
 		].join("")),
-		options: {
-			model: undefined,
-			data: {
-				id: ""
-			}
-		},
+
 		events: {
 			"keypress [name='num']": "inputNum",
 			"click #btnComplated": "complated"
 		},
-		initialize: function(options) {
-			this.options = _.extend({}, _.result(this, 'options'), options || {});
-		},
+		// initialize: function(options) {
+		// 	this.options = _.extend({}, _.result(this, 'options'), options || {});
+		// },
 		render: function() {
-			var html = this.template({
-				data: this.options.data
-			});
+			var data = {};
+			if (this.model) {
+				data = this.model.toJSON();
+			}
+			var html = this.template(data);
 			this.$el.html(html);
 			return this;
 		},
@@ -48,10 +45,14 @@ define(['jquery',
 				return;
 			}
 			// 获取数据model
+			if (!this.model) {
+				alert("尚未导入数据");
+				return;
+			}
 			if (!this.model.get("record")) {
 				return;
 			}
-			var model = this.model.get("record").get(v),
+			var model = this.model.getRecordCollection().get(v),
 				tip;
 			if (model) {
 				var scannedCount = model.get("scannedCount");
@@ -84,7 +85,7 @@ define(['jquery',
 					status: "Error",
 					icon: "glyphicon-exclamation-sign"
 				}
-				this.model.get("record").addOneByScanned(v);
+				this.model.getRecordCollection().addOneByScanned(v);
 				$el.parent().addClass("has-error");
 				this.$el.find("#nodifyAudio")[0].play();
 			}
@@ -93,11 +94,10 @@ define(['jquery',
 		},
 		complated: function() {
 			if (confirm("确定要标记为完成扫描,导出数据？")) {
-				this.model.complated();
-				// var collection = this.model.get("record");
-				// var arr = collection.where({
-					
-				// })
+				// this.model.complated();
+				window.appRouter.navigate("#list/" + this.model.id, {
+					trigger: true
+				});
 			}
 		}
 	});
