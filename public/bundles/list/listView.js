@@ -28,10 +28,10 @@ define(['jquery',
 		export: function() {
 			if (this.model) {
 				var d = this.model.getExportCsv();
-				// $.post("/export", {
-				// 	d: d
-				// });
-			}
+				var form = this.$el.find("form")
+				form.children("[name='data']").val(d);
+				form.submit();
+ 			}
 		}
 	});
 

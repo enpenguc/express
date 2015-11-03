@@ -8,6 +8,7 @@ var multiparty = require('connect-multiparty');
 
 var routes = require('./routes/index');
 var uploader = require('./routes/upload');
+var downloader = require('./routes/download');
 var users = require('./routes/users');
 
 var app = express();
@@ -37,6 +38,7 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/', routes);
 app.use('/upload', uploader);
+app.use('/download', downloader);
 app.use('/users', users);
 
 // catch 404 and forward to error handler

@@ -11,6 +11,9 @@ var getData = function(name, output) {
 		takeOut = [],
 		item;
 	for (var i = 0; i < output.length; i++) {
+		if (i === 0) {
+			continue;
+		}
 		item = output[i];
 		if (!item || !item[0]) {
 			break;

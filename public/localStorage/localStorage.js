@@ -44,6 +44,11 @@ define(['jquery',
 		},
 		// 获取记录集合
 		getRecordCollection: function() {
+			// var c = this.get("recordCollection");
+			// if (!c) {
+			// 	var d = this.get("record");
+			// 	this.set("recordCollection", new Record.Collection(d));
+			// }
 			return this.get("recordCollection");
 		},
 		// 获取导出csv的数据
@@ -66,15 +71,15 @@ define(['jquery',
 			var arrChongfu = collection.where(function(item) {
 				return item.scannedCount > 1;
 			});
-			var arr = [],
+			var arr = ["原始清单,取出包裹,到货未申报,申报未到货,重复单号"],
 				tmp = []
 			for (var i = 0; i < arrOrigin.length; i++) {
 				tmp = [
-					arrOrigin[i],
-					arrTakeout[i] ? arrTakeout[i] : "",
-					arrNoDeclare[i] ? arrNoDeclare[i] : "",
-					arrNoScanned[i] ? arrNoScanned[i] : "",
-					arrChongfu[i] ? (arrChongfu[i] + "重复" + arrChongfu[i].scannedCount + "次") : ""
+					arrOrigin[i].id,
+					arrTakeout[i] ? arrTakeout[i].id : "",
+					arrNoDeclare[i] ? arrNoDeclare[i].id : "",
+					arrNoScanned[i] ? arrNoScanned[i].id : "",
+					arrChongfu[i] ? (arrChongfu[i].id + "重复" + arrChongfu[i].scannedCount + "次") : ""
 				]
 				arr.push(tmp.join(","))
 			}
