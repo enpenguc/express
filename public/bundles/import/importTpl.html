@@ -5,17 +5,10 @@
                 <!-- Main component for a primary marketing message or call to action -->
                 <div class="jumbotron">
                     <h2>导入运单</h2> 
-                    {{#if complated}}
-                    <div class="alert alert-success" role="alert">
-                        <p>已成功导入<code>{{count}}</code>条记录，其中需要取出<code>{{takeout}}</code>个包裹，</p>
-                        <p>您可以查看 <a href="#list">清单列表</a> 或者 <a href="#scan">扫描包裹</a></p>
-                    </div>
-                    {{else}}
                     <p>请选择运单列表csv文件，或将文件拖入此下面区域，导入数据...</p>
                     <div id="import">
                         <input type="file" name="thumbnail" id="upload" />
                     </div>
-                    {{/if}}
                 </div>
             </div>
         </div>

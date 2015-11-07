@@ -10,7 +10,7 @@
     <meta name="description" content=""> {{!--
     <link rel="icon" href="../favicon.ico"> --}}
     <link rel="shortcut icon" href="/images/favicon.png">
-    <title>demo-{{title}}</title>
+    <title>Express-{{title}}</title>
     <link rel='stylesheet' href='/bootstrap/dist/css/bootstrap.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/bootstrap-fileinput/css/fileinput.css' />
@@ -32,11 +32,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">demo</a>
+                <a class="navbar-brand" href="#">Express</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">首页<span class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="#import">导入运单<span class="sr-only">(current)</span></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#history" title="点击查看入库历史">历史记录</a></li>
@@ -45,7 +45,7 @@
         </div>
     </nav>
     <div id="container">
-    {{{body}}}        
+        {{{body}}}
     </div>
     <script data-baseurl="./" data-main="config.js" src="/requirejs/require.js" id="main"></script>
 </body>

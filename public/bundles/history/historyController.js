@@ -5,22 +5,33 @@
  * @version $Id$
  */
 define(['jquery',
+	'underscore',
 	'./historyView.js',
-	'/LocalStorage/LocalStorage.js'
-], function($, View, LocalStorage) {
+], function($, _, View, LocalStorage) {
 	"use strict"
-	var controller = function() {
-		var view = new View({
-			collection: LocalStorage.db
-		});
-		$("#container").empty().append(view.render().el);
-		// onRouteChange销毁
-		controller.onRouteChange = function() {
-			console.log('change');
-			//可以做一些销毁工作，例如view.undelegateEvents()
-			view.remove();
-			view = null;
-		};
+
+	var controller = function(options) {
+		this.options = _.extend({}, _.result(this, 'options'), options || {});
+		this.initialize.apply(this, this.options.params);
 	};
+	controller.prototype = {
+		options: {
+			router: undefined,
+			dbStorage: undefined,
+			params: {},
+			el: "#container"
+		},
+		initialize: function(options) {
+			var view = new View({
+				collection: this.options.dbStorage
+			});
+			$(this.options.el).empty().append(view.render().el);
+		},
+		destroy: function() {
+			if (this.view) {
+				this.view.remove();
+			}
+		}
+	}
 	return controller;
 });

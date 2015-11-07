@@ -1,0 +1,31 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>申报编号</th>
+            <th>需要取出</th>
+            <th>到货未申报</th>
+            <th>已扫描</th>
+            <th>单号重复</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each this}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{#if takeout}}{{takeout}}{{/if}}</td>
+            <td>{{#if noDeclare}}到货未申报{{/if}}</td>
+            <td>{{#if scanned}}OK{{else}}未扫描{{/if}}</td>
+            <td>{{#compare scannedCount ">" 1}}<code>重复{{exec scannedCount "-" 1}}次</code>{{/compare}}</td>
+        </tr>
+        {{else}}
+        <tr>
+            <td colspan="5" class="text-center"><code>没有记录</code></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-sm-12">
+    当前{{this.length}}条记录
+    </div>
+</div>

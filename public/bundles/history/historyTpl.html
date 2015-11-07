@@ -13,8 +13,10 @@
                             <tr>
                                 <th>导入名称</th>
                                 <th>记录数</th>
+                                <th>已经扫描</th>
+                                <th>未申报到货</th>
                                 <th>是否完成</th>
-                                <!-- <th>上传时间</th> -->
+                                <th>上传时间</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
@@ -23,9 +25,14 @@
                             <tr>
                                 <td>{{name}}</td>
                                 <td>{{count}}</td>
+                                <td>{{countScanned}}</td>
+                                <td>{{countNoDeclare}}</td>
                                 <td>{{#if complated}}完成{{else}} <code title="为标记未扫描完成">未完成</code> {{/if}}</td>
-                                <!-- <td>{{ctime}}</td> -->
-                                <td><a href="#list/{{id}}">查看</a></td>
+                                <td>{{moment ctime "YYYY-MM-DD HH:mm:ss"}}</td>
+                                <td>
+                                    <a href="#list/{{id}}">查看</a>
+                                    <a href="javascript:;" data-id="{{id}}" data-action="delete">删除</a>
+                                </td>
                             </tr>
                             {{else}}
                             <tr>
@@ -40,7 +47,7 @@
         <div class="col-md-1">
             <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">
                 <ul class="nav bs-docs-sidenav">
-                    <li class=""><a href="#import">导入运单</a></li>
+                    <!-- <li class=""><a href="#import">导入运单</a></li> -->
                     <li class=""><a href="#list">清单列表</a></li>
                     <li class=""><a href="#scan">扫描包裹</a></li>
                 </ul>

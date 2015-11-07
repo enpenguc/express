@@ -7,7 +7,7 @@
                 <p>
                     鼠标点击下面输入框，扫描录入...
                     {{#if id}}
-                    <input type="button" id="btnComplated" class="btn btn-primary pull-right" value="标记为完成，导出数据">
+                    <input type="button" id="btnComplated" class="btn btn-primary pull-right" value="已经扫描完成">
                     {{/if}}
                 </p>
                 <div class="form-group has-feedback">
@@ -20,7 +20,7 @@
         <div class="col-md-1">
             <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">
                 <ul class="nav bs-docs-sidenav">
-                    <li class=""><a href="#import">导入运单</a></li>
+                    <!-- <li class=""><a href="#import">导入运单</a></li> -->
                     <li class=""><a href="#list{{#if id}}/{{id}}{{/if}}">清单列表</a></li>
                     <li class=""><a href="#scan{{#if id}}/{{id}}{{/if}}">扫描包裹</a></li>
                 </ul>

@@ -8,7 +8,7 @@ define(['jquery',
 	'underscore',
 	'backbone',
 	'handlebars',
-	'text!./indexTpl.html',
+	'text!./importTpl.html',
 	'bootstrap-fileinput-locale'
 ], function($, _, Backbone, Handlebars, tpl) {
 	"use strict"
@@ -16,26 +16,16 @@ define(['jquery',
 	var indexView = Backbone.View.extend({
 		template: Handlebars.compile(tpl),
 		options: {
-			dbStorage: undefined
+			dbStorage: undefined,
+			router: undefined
 		},
 		initialize: function(options) {
 			this.options = _.extend({}, _.result(this, 'options'), options || {});
 		},
 		render: function() {
-			var complated = !!this.model,
-				data = {};
-			if (complated) {
-				data = {
-					complated: true,
-					count: this.model.getRecordCollection().length,
-					takeout: this.model.getRecordCollection().getTackoutCount()
-				}
-			}
-			var html = this.template(data);
+			var html = this.template({});
 			this.$el.html(html);
-			if (!complated) {
-				this.renderUploader();
-			}
+			this.renderUploader();
 			return this;
 		},
 		renderUploader: function() {
@@ -78,11 +68,12 @@ define(['jquery',
 		},
 		loadDataSuccess: function(data) {
 			var self = this;
-			this.model = this.options.dbStorage.addRecord(data);
+			this.options.dbStorage.addRecord(data);
 			window.setTimeout(function() {
 				self.$('#upload').fileinput('destroy');
-				self.render();
-				// window.location.reload();
+				self.options.router.navigate("#list", {
+					trigger: true
+				});
 			}, 600);
 		},
 		remove: function(argument) {

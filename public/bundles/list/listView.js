@@ -7,14 +7,18 @@
 define(['jquery',
 	'backbone',
 	'handlebars',
-	'text!./listTpl.html'
-], function($, Backbone, Handlebars, tpl) {
+	'text!./listTpl.html',
+	'text!./tableTpl.html',
+	'handlebars-hepler'
+], function($, Backbone, Handlebars, tpl, tableTpl) {
 	"use strict"
 
 	var View = Backbone.View.extend({
 		template: Handlebars.compile(tpl),
+		templateTable: Handlebars.compile(tableTpl),
 		events: {
-			"click #btnExport": "export"
+			"click #btnExport": "export",
+			"change #selFilter": "filter"
 		},
 		render: function() {
 			var data = {};
@@ -31,7 +35,51 @@ define(['jquery',
 				var form = this.$el.find("form")
 				form.children("[name='data']").val(d);
 				form.submit();
- 			}
+			}
+		},
+		filter: function(e) {
+			var v = $(e.target).val(),
+				attrs;
+			switch (v) {
+				case "all":
+					break;
+				case "takeout":
+					attrs = {
+						takeout: true
+					};
+					break;
+				case "noDeclare":
+					attrs = {
+						noDeclare: true
+					};
+					break;
+				case "scanned":
+					attrs = {
+						scanned: true
+					};
+					break;
+				case "noScanned":
+					attrs = {
+						scanned: false
+					};
+					break;
+				case "repetition":
+					attrs = function(item) {
+						return item.scannedCount > 1
+					}
+					break;
+			}
+			var collection = this.model.getRecordCollection(),
+				data = {};
+			if (typeof attrs === "function") {
+				data = collection.where(attrs);
+			} else if (attrs) {
+				data = collection.where(attrs);
+			} else {
+				data = collection.toJSON();
+			}
+			var html = this.templateTable(data);
+			this.$el.find(".bs-table-wrap").empty().append(html);
 		}
 	});
 

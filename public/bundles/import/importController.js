@@ -1,12 +1,12 @@
 /**
- * 清单列表
+ * 
  * @authors 冯恩鹏 (enpenguc@163.com)
- * @date    2015-11-01 16:24:55
+ * @date    2015-11-01 12:42:24
  * @version $Id$
  */
 define(['jquery',
-	'./listView.js',
-], function($, View) {
+	'./importView.js',
+], function($, View, LocalStorage) {
 	"use strict"
 
 	var controller = function(options) {
@@ -20,12 +20,10 @@ define(['jquery',
 			params: {},
 			el: "#container"
 		},
-		initialize: function(id) {
-			var dbStorage = this.options.dbStorage,
-				model = id ? dbStorage.get(id) : dbStorage.getLast()
-
+		initialize: function() {
 			var view = new View({
-				model: model
+				dbStorage: this.options.dbStorage,
+				router: this.options.router
 			});
 			$(this.options.el).empty().append(view.render().el);
 		},
@@ -36,4 +34,5 @@ define(['jquery',
 		}
 	}
 	return controller;
+
 });

@@ -7,13 +7,17 @@
 define(['jquery',
 	'backbone',
 	'handlebars',
-	'text!./historyTpl.html'
+	'text!./historyTpl.html',
+	'handlebars-hepler'
 ], function($, Backbone, Handlebars, tpl) {
 	"use strict"
 	var View = Backbone.View.extend({
 		template: Handlebars.compile(tpl),
 		events: {
-			"keypress [name='num']": "inputNum",
+			"click [data-action='delete']": "removeRecord",
+		},
+		initialize: function() {
+			this.listenTo(this.collection, "remove", this.render);
 		},
 		render: function(argument) {
 			var data = this.collection.toJSON();
@@ -23,9 +27,14 @@ define(['jquery',
 			this.$el.html(html);
 			return this;
 		},
-		inputNum: function(e) {
-
-
+		removeRecord: function(e) {
+			var id = $(e.target).data("id");
+			if (confirm("确定删除此记录么？")) {
+				var model = this.collection.get(id);
+				if (model) {
+					model.destroy();
+				}
+			}
 		}
 	});
 

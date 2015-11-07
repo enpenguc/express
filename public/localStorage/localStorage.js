@@ -6,116 +6,21 @@
  */
 define(['jquery',
 	'underscore',
-	'./record.js',
 	'backbone',
+	'/localstorage/model.js',
 	'backbone.localStorage'
-], function($, _, Record, Backbone) {
+], function($, _, Backbone, Model) {
 
-	var dbSorage = {};
-
-	dbSorage.Model = Backbone.Model.extend({
-		// Default attributes for the todo item.  
-		defaults: function() {
-			return {
-				// 导入csv名称
-				name: "",
-				// 是否已经被扫描完成
-				complated: false,
-				record: [],
-				count: 0,
-				ctime: new Date()
-			};
-		},
-		initialize: function() {
-			var d = this.get("record");
-			this.set("count", d.length);
-
-			this.set("recordCollection", new Record.Collection(d));
-			this.listenTo(this.get("recordCollection"), "change", this.onRecordChange);
-			this.listenTo(this.get("recordCollection"), "add", this.onRecordAdd);
-			_.bindAll(this, "getRecordCollection", "complated");
-			return this;
-		},
-		toJSON: function() {
-			var json = Backbone.Model.prototype.toJSON.apply(this, arguments);
-			json.record = this.get('recordCollection').toJSON();
-			delete json.recordCollection;
-			return json;
-		},
-		// 获取记录集合
-		getRecordCollection: function() {
-			// var c = this.get("recordCollection");
-			// if (!c) {
-			// 	var d = this.get("record");
-			// 	this.set("recordCollection", new Record.Collection(d));
-			// }
-			return this.get("recordCollection");
-		},
-		// 获取导出csv的数据
-		getExportCsv: function() {
-			var collection = this.getRecordCollection();
-
-			var arrOrigin = collection.where({
-				noDeclare: false
-			});
-			var arrTakeout = collection.where({
-				takeout: true,
-				scanned: true
-			});
-			var arrNoDeclare = collection.where({
-				noDeclare: true
-			});
-			var arrNoScanned = collection.where({
-				scanned: false
-			});
-			var arrChongfu = collection.where(function(item) {
-				return item.scannedCount > 1;
-			});
-			var arr = ["原始清单,取出包裹,到货未申报,申报未到货,重复单号"],
-				tmp = []
-			for (var i = 0; i < arrOrigin.length; i++) {
-				tmp = [
-					arrOrigin[i].id,
-					arrTakeout[i] ? arrTakeout[i].id : "",
-					arrNoDeclare[i] ? arrNoDeclare[i].id : "",
-					arrNoScanned[i] ? arrNoScanned[i].id : "",
-					arrChongfu[i] ? (arrChongfu[i].id + "重复" + arrChongfu[i].scannedCount + "次") : ""
-				]
-				arr.push(tmp.join(","))
-			}
-			return arr.join("\r\n");
-		},
-		complated: function() {
-			this.save({
-				complated: true
-			});
-		},
-		onRecordAdd: function() {
-			// this.set("count", this.get("recordCollection").length);
-			this.save({
-				record: this.get("recordCollection").toJSON(),
-				count: this.get("recordCollection").length
-			});
-		},
-		onRecordChange: function() {
-			this.save({
-				record: this.get("recordCollection").toJSON()
-			});
-			// this.save();
-		}
-	});
-
-	dbSorage.Collection = Backbone.Collection.extend({
-		model: dbSorage.Model,
+	var dbStorage = Backbone.Collection.extend({
+		model: Model.Express,
 		comparator: "ctime",
-		// localStorage
-		localStorage: new Backbone.LocalStorage("order-db-backbone"),
+		localStorage: new Backbone.LocalStorage("backbone-express-db"),
 		getLast: function() {
 			var model = this.last();
 			return model && model.get("complated") ? null : model;
 		},
 		addRecord: function(data) {
-			var model = new dbSorage.Model({
+			var model = new Model.Express({
 				name: data.name,
 				record: data.items
 			});
@@ -140,12 +45,5 @@ define(['jquery',
 		}
 	});
 
-	var db = new dbSorage.Collection();
-	db.fetch();
-
-	window.db = db;
-
-	return {
-		db: db
-	}
+	return dbStorage;
 });

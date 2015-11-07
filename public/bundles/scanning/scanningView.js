@@ -23,9 +23,12 @@ define(['jquery',
 			"keypress [name='num']": "inputNum",
 			"click #btnComplated": "complated"
 		},
-		// initialize: function(options) {
-		// 	this.options = _.extend({}, _.result(this, 'options'), options || {});
-		// },
+		options: {
+			router: undefined
+		},
+		initialize: function(options) {
+			this.options = _.extend({}, _.result(this, 'options'), options || {});
+		},
 		render: function() {
 			var data = {};
 			if (this.model) {
@@ -55,8 +58,18 @@ define(['jquery',
 			var model = this.model.getRecordCollection().get(v),
 				tip;
 			if (model) {
-				var scannedCount = model.get("scannedCount");
-				if (scannedCount > 0) {
+				var scannedCount = model.get("scannedCount"),
+					takeout = model.get("takeout");
+				if (takeout) {
+					tip = {
+						id: v,
+						alert: "alert-danger",
+						msg: "需要取出包裹：" + v,
+						status: "INFO",
+						icon: "glyphicon-info-sign"
+					}
+					this.$el.find("#nodifyAudio")[0].play();
+				} else if (scannedCount > 0) {
 					// 重复
 					tip = {
 						id: v,
@@ -94,8 +107,8 @@ define(['jquery',
 		},
 		complated: function() {
 			if (confirm("确定要标记为完成扫描,导出数据？")) {
-				// this.model.complated();
-				window.appRouter.navigate("#list/" + this.model.id, {
+				this.model.complated();
+				this.options.router.navigate("#list/" + this.model.id, {
 					trigger: true
 				});
 			}

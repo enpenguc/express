@@ -4,17 +4,34 @@
             <!-- Main component for a primary marketing message or call to action -->
             <div class="jumbotron">
                 <h2>清单列表</h2>
-                <div class="clearfix">
-                    <input type="button" id="btnExport" class="btn btn-primary pull-right" value="导出列表" {{#if id}}{{else}}disabled{{/if}}>
+                <p style="font-size: 14px;">
+                    统计信息：共{{count}}条记录，其中需要取出包裹{{countTakeout}}个。已扫描{{countScanned}}条，未扫描{{exec count "-" countScanned}}条记录。
+                </p>
+                <div class="row">
+                    <div class="col-sm-12">
+                        过滤：
+                        <select id="selFilter" class="form-control" style="width:200px;display:inline-block;">
+                            <option value="all">全部</option>
+                            <option value="takeout">需要取出</option>
+                            <option value="noDeclare">到货未申报</option>
+                            <option value="scanned">已扫描</option>
+                            <option value="noScanned">未扫描</option>
+                            <option value="repetition">单号重复</option>
+                        </select>
+                        <input type="button" id="btnExport" class="btn btn-primary pull-right" value="导出列表" {{#if id}}{{else}}disabled{{/if}}>
+                    </div>
                 </div>
+                <!-- Single button -->
                 <div class="bs-table-wrap">
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>申报编号</th>
                                 <th>需要取出</th>
-                                <th>到货未申报</th>
-                                <th>扫描状态</th>
+                                <th>到货未申报
+                                    <span class="badge">{{countNoDeclare}}</span></th>
+                                <th>已扫描
+                                    <span class="badge">{{countScanned}}</span></th>
                                 <th>单号重复</th>
                             </tr>
                         </thead>
@@ -22,25 +39,30 @@
                             {{#each record}}
                             <tr>
                                 <td>{{id}}</td>
-                                <td>{{#if takeout}}{{takeout}}{{/if}}</td>
-                                <td>{{#if noDeclare}}{{noDeclare}}{{/if}}</td>
+                                <td>{{#if takeout}}是{{/if}}</td>
+                                <td>{{#if noDeclare}}到货未申报{{/if}}</td>
                                 <td>{{#if scanned}}OK{{else}}未扫描{{/if}}</td>
-                                <td>{{#if scannedCount}}<code>重复{{scannedCount}}次</code>{{/if}}</td>
+                                <td>{{#compare scannedCount ">" 1}}<code>重复{{exec scannedCount "-" 1}}次</code>{{/compare}}</td>
                             </tr>
                             {{else}}
                             <tr>
-                                <td colspan="5" class="text-center">当前尚存在未导入记录</td>
+                                <td colspan="5" class="text-center"><code>没有导入记录</code></td>
                             </tr>
                             {{/each}}
                         </tbody>
                     </table>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            当前{{record.length}}条记录
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-1">
             <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix">
                 <ul class="nav bs-docs-sidenav">
-                    <li class=""><a href="#import">导入运单</a></li>
+                    <!-- <li class=""><a href="#import">导入运单</a></li> -->
                     <li class=""><a href="#list{{#if id}}/{{id}}{{/if}}">清单列表</a></li>
                     <li class=""><a href="#scan{{#if id}}/{{id}}{{/if}}">扫描包裹</a></li>
                 </ul>
