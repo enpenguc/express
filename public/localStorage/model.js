@@ -137,7 +137,7 @@ define(['jquery',
 					arrTakeout[i] ? arrTakeout[i].id : "",
 					arrNoDeclare[i] ? arrNoDeclare[i].id : "",
 					arrNoScanned[i] ? arrNoScanned[i].id : "",
-					arrChongfu[i] ? (arrChongfu[i].id + "重复" + arrChongfu[i].scannedCount + "次") : ""
+					arrChongfu[i] ? (arrChongfu[i].id + "重复" + arrChongfu[i].get("scannedCount") + "次") : ""
 				]
 				arr.push(tmp.join(","))
 			}
