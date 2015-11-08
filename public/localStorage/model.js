@@ -127,7 +127,7 @@ define(['jquery',
 				scanned: false
 			});
 			var arrChongfu = collection.where(function(item) {
-				return item.scannedCount > 1;
+				return item.get("scannedCount") > 1;
 			});
 			var arr = ["原始清单,取出包裹,到货未申报,申报未到货,重复单号"],
 				tmp = []
