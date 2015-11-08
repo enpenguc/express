@@ -5,12 +5,13 @@
  * @version $Id$
  */
 define(['jquery',
+	'underscore',
 	'backbone',
 	'handlebars',
 	'text!./listTpl.html',
 	'text!./tableTpl.html',
 	'handlebars-hepler'
-], function($, Backbone, Handlebars, tpl, tableTpl) {
+], function($, _, Backbone, Handlebars, tpl, tableTpl) {
 	"use strict"
 
 	var View = Backbone.View.extend({
@@ -70,13 +71,14 @@ define(['jquery',
 					break;
 			}
 			var collection = this.model.getRecordCollection(),
+				list = collection.toJSON(),
 				data = {};
 			if (typeof attrs === "function") {
-				data = collection.where(attrs);
+				data = _.filter(list, attrs);
 			} else if (attrs) {
-				data = collection.where(attrs);
+				data = _.where(list, attrs);
 			} else {
-				data = collection.toJSON();
+				data = list;
 			}
 			var html = this.templateTable(data);
 			this.$el.find(".bs-table-wrap").empty().append(html);

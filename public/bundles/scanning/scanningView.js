@@ -88,7 +88,7 @@ define(['jquery',
 						icon: "glyphicon-ok-sign"
 					}
 				}
-				model.scanned();
+				model.setScanned();
 				$el.val("").focus().parent().removeClass("has-error");
 			} else {
 				tip = {

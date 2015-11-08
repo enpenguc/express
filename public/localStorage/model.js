@@ -25,7 +25,7 @@ define(['jquery',
 				noDeclare: false
 			};
 		},
-		scanned: function() {
+		setScanned: function() {
 			var count = this.get("scannedCount");
 			this.set({
 				scanned: true,
