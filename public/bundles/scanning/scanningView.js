@@ -89,7 +89,6 @@ define(['jquery',
 					}
 				}
 				model.setScanned();
-				$el.val("").focus().parent().removeClass("has-error");
 			} else {
 				tip = {
 					id: v,
@@ -99,9 +98,9 @@ define(['jquery',
 					icon: "glyphicon-exclamation-sign"
 				}
 				this.model.getRecordCollection().addOneByScanned(v);
-				$el.parent().addClass("has-error");
 				this.$el.find("#nodifyAudio")[0].play();
 			}
+			$el.val("").focus();
 			var html = this.templateTip(tip);
 			this.$el.find("#result").empty().append(html);
 		},
