@@ -53,6 +53,29 @@ define(['jquery',
 		}
 	});
 
+	var Log = Backbone.Model.extend({
+		defaults: function() {
+			return {
+				// 包裹编号orderId
+				orderId: undefined,
+				// 状态
+				status: "Success",
+				// 消息
+				msg: "",
+				// 日志
+				ctime: new Date().getTime()
+			};
+		}
+	});
+
+	var Logs = Backbone.Collection.extend({
+		model: Log,
+		comparator: function(obj1) {
+			return -obj1.get("ctime");
+		}
+	});
+
+
 	// express:一个批次的order
 	var Express = Backbone.Model.extend({
 		defaults: function() {
@@ -61,7 +84,10 @@ define(['jquery',
 				name: "",
 				// 是否已经被扫描完成
 				complated: false,
+				// 订单列表
 				record: [],
+				// 扫描日志
+				logs: [],
 				// 清单总计
 				count: 0,
 				// 需要取出计数
@@ -70,44 +96,59 @@ define(['jquery',
 				countScanned: 0,
 				// 到货未申报
 				countNoDeclare: 0,
+				// 导入时间
 				ctime: new Date()
 			};
 		},
 		initialize: function() {
+			// orders
 			var d = this.get("record");
 			var collection = new Record(d);
-			this.set("recordCollection", collection);
-			// 计数统计
-			this.computeCount();
+			this.set("recordCollection", collection, {
+				silent: true
+			});
+			// logs
+			var logCollection = new Logs(this.get("logs"));
+			this.set("logCollection", logCollection);
 
 			//listen
-			this.listenTo(collection, "change", this.onRecordChange);
-			this.listenTo(collection, "add", this.onRecordAdd);
+			this.listenTo(collection, "add change", this.saveChange);
+
+			// this.listenTo(collection, "change", this.onRecordChange);
+			// this.listenTo(collection, "add", this.onRecordAdd);
 			_.bindAll(this, "getRecordCollection", "complated");
-			return this;
+			// 计数统计
+			this.computeCount();
 		},
 		computeCount: function() {
 			var collection = this.getRecordCollection();
-			this.set("count", collection.length);
-			this.set("countTakeout", collection.where({
-				takeout: true
-			}).length);
-			this.set("countScanned", collection.where({
-				scanned: true
-			}).length);
-			this.set("countNoDeclare", collection.where({
-				noDeclare: true
-			}).length);
+			this.set({
+				"count": collection.length,
+				"countTakeout": collection.where({
+					takeout: true
+				}).length,
+				"countScanned": collection.where({
+					scanned: true
+				}).length,
+				"countNoDeclare": collection.where({
+					noDeclare: true
+				}).length
+			});
 		},
 		toJSON: function() {
 			var json = Backbone.Model.prototype.toJSON.apply(this, arguments);
-			json.record = this.get('recordCollection').toJSON();
+			json.record = json.recordCollection.toJSON();
+			json.logs = json.logCollection.toJSON();
 			delete json.recordCollection;
+			delete json.logCollection;
 			return json;
 		},
 		// 获取记录集合
 		getRecordCollection: function() {
 			return this.get("recordCollection");
+		},
+		getLogCollection: function() {
+			return this.get("logCollection");
 		},
 		// 获取导出csv的数据
 		getExportCsv: function() {
@@ -139,7 +180,7 @@ define(['jquery',
 					arrNoScanned[i] ? arrNoScanned[i].id : "",
 					arrChongfu[i] ? (arrChongfu[i].id + "重复" + arrChongfu[i].get("scannedCount") + "次") : ""
 				]
-				arr.push(tmp.join(","))
+				arr.push(tmp.join(","));
 			}
 			return arr.join("\r\n");
 		},
@@ -149,18 +190,69 @@ define(['jquery',
 				complated: true
 			});
 		},
-		onRecordAdd: function() {
-			this.computeCount();
-			this.save({
-				record: this.get("recordCollection").toJSON(),
-				count: this.get("recordCollection").length
-			});
+		// 扫描
+		scanning: function(orderId) {
+			var collection = this.getRecordCollection(),
+				logCollection = this.getLogCollection();
+			if (!collection) {
+				return;
+			}
+			var model = collection.get(orderId);
+			if (model) {
+				var scannedCount = model.get("scannedCount"),
+					takeout = model.get("takeout"),
+					status,
+					msg;
+				if (takeout) {
+					status = "Warning";
+					msg = "需要取出包裹：" + orderId;
+				} else if (scannedCount > 0) {
+					// 重复
+					status = "Error";
+					msg = "重复包裹：" + orderId + ", 重复" + scannedCount + "次";
+				} else {
+					status = "Success";
+					msg = "成功扫描：" + orderId;
+				}
+				// log日志
+				var log = logCollection.add({
+					orderId: orderId,
+					status: status,
+					takeout: takeout,
+					scannedCount: scannedCount,
+					msg: msg
+				});
+				model.setScanned();
+				return log;
+			} else {
+				// log日志
+				var log = logCollection.add({
+					orderId: orderId,
+					status: "Info",
+					msg: "未申报到货：" + orderId
+				});
+				collection.addOneByScanned(orderId);
+				return log;
+			}
 		},
-		onRecordChange: function() {
+		// onRecordAdd: function() {
+		// 	this.computeCount();
+		// 	this.save({
+		// 		record: this.get("recordCollection").toJSON(),
+		// 		count: this.get("recordCollection").length
+		// 	});
+		// },
+		// onRecordChange: function() {
+		// 	this.computeCount();
+		// 	this.save({
+		// 		record: this.get("recordCollection").toJSON()
+		// 	});
+		// },
+		saveChange: function() {
+			console.log("saveChange")
 			this.computeCount();
-			this.save({
-				record: this.get("recordCollection").toJSON()
-			});
+			this.save();
+			// this.set("record", this.get("recordCollection").toJSON());
 		}
 	});
 

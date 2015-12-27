@@ -15,6 +15,13 @@ define(['jquery',
 		model: Model.Express,
 		comparator: "ctime",
 		localStorage: new Backbone.LocalStorage("backbone-express-db"),
+		initialize: function() {
+			this.listenTo(this, "change", this.saveData);
+		},
+		saveData: function() {
+			console.log(arguments);
+			// this.save();
+		},
 		getLast: function() {
 			var model = this.last();
 			return model && model.get("complated") ? null : model;

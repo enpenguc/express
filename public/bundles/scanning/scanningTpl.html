@@ -1,19 +1,24 @@
-<div class="container">
+<div class="container bundles-sacnning">
     <div class="row">
         <div class="col-md-11">
             <!-- Main component for a primary marketing message or call to action -->
             <div class="jumbotron">
                 <h2>扫描包裹</h2>
                 <p>
-                    鼠标点击下面输入框，扫描录入...
-                    {{#if id}}
-                    <input type="button" id="btnComplated" class="btn btn-primary pull-right" value="已经扫描完成">
-                    {{/if}}
+                    鼠标点击下面输入框，扫描录入... {{#if id}}
+                    <input type="button" id="btnComplated" class="btn btn-primary pull-right" value="已经扫描完成"> {{/if}}
                 </p>
                 <div class="form-group has-feedback">
-                    <input type="text" name="num" class="form-control input-lg" placeholder="输入运单后回车" />
+                    <input type="text" name="num" class="form-control input-lg" placeholder="输入运单号回车" maxlength="50" />
+                    <span class="glyphicon glyphicon-qrcode form-control-feedback"></span>
                 </div>
-                <div id="result">
+                <div class="log">
+                    <div class="log-title">
+                        <span class="glyphicon glyphicon-option-vertical"></span>
+                        <span class="sr-only">Success:</span>
+                        <span>扫描日志：</span>
+                    </div>
+                    <div id="result" class="log-text"></div>
                 </div>
             </div>
         </div>
@@ -28,5 +33,6 @@
             </nav>
         </div>
     </div>
-    <audio id="nodifyAudio" src="/resources/error.mp3" controls="false" hidden="true">
+    <audio id="nodifyAudioError" src="/resources/error.mp3" controls="false" hidden="true">
+    <audio id="nodifyAudioSuccess" src="/resources/success.wav" controls="false" hidden="true">
 </div>

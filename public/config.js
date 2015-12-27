@@ -70,7 +70,7 @@
 	], function(Backbone, Router, DBStorage) {
 
 		var dbStorage = new DBStorage();
-		dbStorage.fetch();
+		dbStorage.fetch({silent: true});
 		var router = new Router({
 			dbStorage: dbStorage
 		});
